@@ -16,6 +16,7 @@ def gerar_par_de_chaves():
     # Serialização das chaves para armazenamento
     chave_privada_serializada = chave_privada.private_bytes(
         encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,  # Argumento 'format' que estava faltando.
         encryption_algorithm=serialization.NoEncryption()
     )
     chave_publica_serializada = chave_publica.public_bytes(
