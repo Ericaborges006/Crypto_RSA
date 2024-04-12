@@ -16,7 +16,7 @@ def gerar_par_de_chaves():
     # Serialização das chaves para armazenamento
     chave_privada_serializada = chave_privada.private_bytes(
         encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.PKCS8,  # Argumento 'format' que estava faltando.
+        format=serialization.PrivateFormat.PKCS8,
         encryption_algorithm=serialization.NoEncryption()
     )
     chave_publica_serializada = chave_publica.public_bytes(
@@ -59,14 +59,37 @@ def desencriptar_mensagem(mensagem_encriptada, chave_privada_serializada):
     )
     return mensagem_desencriptada.decode()
 
+#Função para escolher como escrever a mensagem
+def escolher_metodo():
+    print("Escolha o método de entrada da mensagem:")
+    print("1 - Ler a mensagem de um arquivo .txt")
+    print("2 - Digitar a mensagem na consola")
+    print ("3 - Digitar mensagem e gravar no .txt")
+    opcao = input("Digite a opção desejada (1, 2 ou 3): ")
+
+    if opcao == "1":
+        with open('mensagem.txt', 'r') as file:
+            return file.read()
+    elif opcao == "2":
+        return input("Digite a mensagem: ")
+    elif opcao == "3":
+        mensagem = input("Digite a mensagem: ")
+        with open('mensagem.txt', 'w') as file:
+            file.write(mensagem)
+        return mensagem
+    else:
+        print("Opção inválida. Tente novamente.")
+        return None
+
+
 # Exemplo de uso
 chave_publica, chave_privada = gerar_par_de_chaves()
-with open('mensagem.txt', 'r') as file:
-    mensagem = file.read()
+mensagem = escolher_metodo()
 
-mensagem_encriptada = encriptar_mensagem(mensagem, chave_publica)
-mensagem_desencriptada = desencriptar_mensagem(mensagem_encriptada, chave_privada)
+if mensagem:
+    mensagem_encriptada = encriptar_mensagem(mensagem, chave_publica)
+    mensagem_desencriptada = desencriptar_mensagem(mensagem_encriptada, chave_privada)
 
-print(f"Mensagem original: {mensagem}")
-print(f"Mensagem encriptada: {mensagem_encriptada}")
-print(f"Mensagem desencriptada: {mensagem_desencriptada}")
+    print(f"Mensagem original: {mensagem}")
+    print(f"Mensagem encriptada: {mensagem_encriptada}")
+    print(f"Mensagem desencriptada: {mensagem_desencriptada}")
